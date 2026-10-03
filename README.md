@@ -6,6 +6,16 @@ The skill separates documented LinkedIn guidance from guesses about reach or AI 
 
 ## Install
 
+Windows PowerShell — paste this single command:
+
+```powershell
+irm https://raw.githubusercontent.com/fahim36/linkedin-content-writer/main/install-online.ps1 | iex
+```
+
+This downloads the skill directly, with no Git, Python, administrator access, or execution-policy change. Run it again to update; any existing installation is preserved under `.skill-backups` beside your skills directory. It respects `CODEX_HOME`. Start a new Codex session after installation. You can [review the installer](install-online.ps1) before running it.
+
+### Install from a local checkout
+
 Requires Codex and Python 3.9+. Git is needed for the clone commands; alternatively download and extract the repository ZIP from GitHub.
 
 ```sh
@@ -72,6 +82,7 @@ The default installer refuses to overwrite an existing skill. To uninstall, remo
 - `skills/linkedin-content-writer/agents/openai.yaml`: Codex display metadata.
 - `skills/linkedin-content-writer/references/linkedin-platform.md`: dated primary-source links and interpretation guidance.
 - `install.py`, `install.ps1`, `install.sh`: local installers.
+- `install-online.ps1`: standalone Windows download-and-install script.
 - `tests/test_install.py`: isolated installer regression tests.
 
 Run tests with `python -m unittest discover -s tests -v`. This project is independent of LinkedIn and OpenAI.
