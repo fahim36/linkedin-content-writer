@@ -6,6 +6,26 @@ The skill separates documented LinkedIn guidance from guesses about reach or AI 
 
 ## Install
 
+### Claude Code
+
+Windows PowerShell — no Git or Python needed:
+
+```powershell
+irm https://raw.githubusercontent.com/fahim36/linkedin-content-writer/main/install-claude.ps1 | iex
+```
+
+Installs the shared skill and reference into `~/.claude/skills/linkedin-content-writer` (or under `CLAUDE_CONFIG_DIR` when configured), without Codex UI metadata. Updates preserve your previous installation in `.skill-backups`. In Claude Code, invoke it with:
+
+```text
+/linkedin-content-writer Research this topic and draft a LinkedIn post for software engineers.
+```
+
+Claude Code uses the same standard `SKILL.md` format; see the [official skills documentation](https://code.claude.com/docs/en/skills). Publication still requires an available integration or browser tool and explicit user authorization.
+
+For a local checkout, run `./install-online.ps1 -Agent ClaudeCode`. On any platform you can also copy `skills/linkedin-content-writer` into `~/.claude/skills/`; only `SKILL.md` and `references/` are needed.
+
+### Codex
+
 Windows PowerShell — paste this single command:
 
 ```powershell

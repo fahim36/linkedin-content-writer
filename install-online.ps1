@@ -1,9 +1,11 @@
 # Standalone installer: PowerShell 5.1+, no Git or Python required.
-param([string]$SkillsDirectory)
+param([string]$SkillsDirectory, [ValidateSet('Codex', 'ClaudeCode')][string]$Agent = 'Codex')
 $ErrorActionPreference = 'Stop'
 $skillName = 'linkedin-content-writer'
 if (-not $SkillsDirectory) {
-    $codexDirectory = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
+    $codexDirectory = if ($Agent -eq 'ClaudeCode') {
+        if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME '.claude' }
+    } elseif ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
     $SkillsDirectory = Join-Path $codexDirectory 'skills'
 }
 $skillsRoot = [IO.Path]::GetFullPath($SkillsDirectory)
@@ -18,7 +20,9 @@ try {
     $null = New-Item -ItemType Directory -Path $staging
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
     $baseUrl = 'https://raw.githubusercontent.com/fahim36/linkedin-content-writer/main/skills/linkedin-content-writer'
-    foreach ($file in @('SKILL.md', 'agents/openai.yaml', 'references/linkedin-platform.md')) {
+    $files = @('SKILL.md', 'references/linkedin-platform.md')
+    if ($Agent -eq 'Codex') { $files += 'agents/openai.yaml' }
+    foreach ($file in $files) {
         $destination = Join-Path $staging $file
         $null = New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destination)
         Invoke-WebRequest -UseBasicParsing -Uri "$baseUrl/$file" -OutFile $destination
@@ -40,7 +44,8 @@ try {
     }
     Write-Host "Installed: $target"
     if ($backup) { Write-Host "Previous installation saved: $backup" }
-    Write-Host 'Start a new Codex session and use $linkedin-content-writer.'
+    if ($Agent -eq 'ClaudeCode') { Write-Host 'In Claude Code, use /linkedin-content-writer.' }
+    else { Write-Host 'Start a new Codex session and use $linkedin-content-writer.' }
 }
 finally {
     # Only remove the uniquely created staging directory inside the chosen root.
