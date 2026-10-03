@@ -1,0 +1,21 @@
+name: Installer checks
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - run: python -m unittest discover -s tests -v
+      - name: Windows wrapper
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./install.ps1 --skills-dir "${{ runner.temp }}/wrapper skills" --dry-run
+      - name: Unix wrapper
+        if: runner.os != 'Windows'
+        run: sh ./install.sh --skills-dir "${{ runner.temp }}/wrapper skills" --dry-run

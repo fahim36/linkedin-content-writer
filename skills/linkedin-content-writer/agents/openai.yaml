@@ -1,0 +1,4 @@
+interface:
+  display_name: "LinkedIn Content Writer"
+  short_description: "Research and write useful, natural LinkedIn posts"
+  default_prompt: "Use $linkedin-content-writer to research this topic and draft a concrete LinkedIn post for my audience."
